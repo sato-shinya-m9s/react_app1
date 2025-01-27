@@ -1,4 +1,4 @@
 実行方法
-- cd vite-project
+- cd frontend
 - npm run dev
-- http://localhost:5173/
+- Access to http://localhost:5173/
