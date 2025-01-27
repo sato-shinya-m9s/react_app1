@@ -1,19 +1,23 @@
 /* /frontend/src/components/DocumentCatalog.css */
 .document-catalog {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .main-title {
   font-size: 24px;
   font-weight: 700;
   color: #31363d;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .main-description {
-  font-size: 14px;
+  font-size: 16px;
   color: #31363d;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .search-button {
@@ -23,11 +27,13 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 20px;
+  display: block;
+  margin: 0 auto 20px;
 }
 
 .filter-section {
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -42,10 +48,12 @@
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 200px;
 }
 
 .dropdown-section {
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
 }
