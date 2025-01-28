@@ -1,8 +1,38 @@
-// /frontend/src/components/DocumentCatalog.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import './DocumentCatalog.css';
 
 const DocumentCatalog = () => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
+  const data = [
+    { year: '令和5年度', number: '総総第XXX号', department: '〇〇局〇〇部〇〇課', title: '令和5年度 XXX執行に係るXXXXXXXXXX', date: '2023/09/14', duration: '5年' },
+    { year: '令和5年度', number: '市総第XXX号', department: '〇〇局〇〇部〇〇課', title: 'XXXXXの適用に係る定期報告', date: '2023/11/27', duration: '3年' },
+  ];
+
+  const sortedData = React.useMemo(() => {
+    let sortableItems = [...data];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [data, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
   return (
     <div className="document-catalog">
       <h1 className="main-title">行政文書目録</h1>
@@ -23,31 +53,43 @@ const DocumentCatalog = () => {
       <table className="document-table">
         <thead>
           <tr>
-            <th>作成年度</th>
-            <th>文書番号</th>
-            <th>文書有課</th>
-            <th>文書件名</th>
-            <th>提供・決裁完了年月日</th>
-            <th>保存期間</th>
+            <th>
+              作成年度
+              <button onClick={() => requestSort('year')}>⇅</button>
+            </th>
+            <th>
+              文書番号
+              <button onClick={() => requestSort('number')}>⇅</button>
+            </th>
+            <th>
+              文書有課
+              <button onClick={() => requestSort('department')}>⇅</button>
+            </th>
+            <th>
+              文書件名
+              <button onClick={() => requestSort('title')}>⇅</button>
+            </th>
+            <th>
+              提供・決裁完了年月日
+              <button onClick={() => requestSort('date')}>⇅</button>
+            </th>
+            <th>
+              保存期間
+              <button onClick={() => requestSort('duration')}>⇅</button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>令和5年度</td>
-            <td>総総第XXX号</td>
-            <td>〇〇局〇〇部〇〇課</td>
-            <td>令和5年度 XXX執行に係るXXXXXXXXXX</td>
-            <td>2023/09/14</td>
-            <td>5年</td>
-          </tr>
-          <tr>
-            <td>令和5年度</td>
-            <td>市総第XXX号</td>
-            <td>〇〇局〇〇部〇〇課</td>
-            <td>XXXXXの適用に係る定期報告</td>
-            <td>2023/11/27</td>
-            <td>3年</td>
-          </tr>
+          {sortedData.map((item, index) => (
+            <tr key={index}>
+              <td>{item.year}</td>
+              <td>{item.number}</td>
+              <td>{item.department}</td>
+              <td>{item.title}</td>
+              <td>{item.date}</td>
+              <td>{item.duration}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

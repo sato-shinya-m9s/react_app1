@@ -88,6 +88,19 @@
   color: #31363d;
 }
 
+.document-table th button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 5px;
+  color: #007bff;
+}
+
+.document-table th button:hover {
+  color: #0056b3;
+}
+
 .document-table tr:nth-child(even) {
   background-color: #f1f2f2;
 }
