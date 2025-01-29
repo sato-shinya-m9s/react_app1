@@ -61,11 +61,11 @@ const DocumentCatalog = () => {
     setEntriesPerPage(Number(event.target.value));
     setCurrentPage(1); // エントリー数変更時に最初のページにリセット
   };
-  
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  
+
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = sortedData.slice(indexOfFirstEntry, indexOfLastEntry);
@@ -83,10 +83,10 @@ const DocumentCatalog = () => {
           </div>
           <div className="dropdown-section">
             <label htmlFor="entries-dropdown" className="entries-label">表示:</label>
-            <select id="entries-dropdown" className="entries-dropdown">
-              <option>10</option>
-              <option>20</option>
-              <option>50</option>
+            <select id="entries-dropdown" className="entries-dropdown" onChange={handleEntriesChange} value={entriesPerPage}>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
             </select>
           </div>
         </div>
@@ -120,7 +120,6 @@ const DocumentCatalog = () => {
             </th>
           </tr>
         </thead>
-        {/*currentEntriesを使用してレンダリングロジックを更新*/}
         <tbody>
           {currentEntries.map((item, index) => (
             <tr key={index}>
@@ -133,29 +132,20 @@ const DocumentCatalog = () => {
             </tr>
           ))}
         </tbody>
-
-        {/* ページネーションコントロールを追加*/}
-        <div className="pagination">
-          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-            前
-          </button>
-          {[...Array(Math.ceil(sortedData.length / entriesPerPage)).keys()].map(number => (
-            <button key={number + 1} onClick={() => handlePageChange(number + 1)} className={currentPage === number + 1 ? 'active' : ''}>
-              {number + 1}
-            </button>
-          ))}
-          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(sortedData.length / entriesPerPage)}>
-            次
-          </button>
-        </div>
-
-        {/* エントリー数変更用のドロップダウンを更新*/}
-        <select id="entries-dropdown" className="entries-dropdown" onChange={handleEntriesChange} value={entriesPerPage}>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-        </select>
       </table>
+      <div className="pagination">
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          前
+        </button>
+        {[...Array(Math.ceil(sortedData.length / entriesPerPage)).keys()].map(number => (
+          <button key={number + 1} onClick={() => handlePageChange(number + 1)} className={currentPage === number + 1 ? 'active' : ''}>
+            {number + 1}
+          </button>
+        ))}
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(sortedData.length / entriesPerPage)}>
+          次
+        </button>
+      </div>
     </div>
   );
 };
