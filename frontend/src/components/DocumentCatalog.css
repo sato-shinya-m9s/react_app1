@@ -85,7 +85,8 @@
 
 .document-table td,
 .document-table th {
-  border: 1px solid #ccc;
+  /* 縦の線を消すためにボーダーを削除 */
+  border: none;
   padding: 10px;
   text-align: left;
 }
