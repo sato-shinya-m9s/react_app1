@@ -3,6 +3,8 @@ import './DocumentCatalog.css';
 
 const DocumentCatalog = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
 
   const data = [
     { year: '令和5年度', number: '総総第XXX号', department: '〇〇局〇〇部〇〇課', title: '令和5年度 XXX執行に係るXXXXXXXXXX', date: '2023/09/14', duration: '5年' },
@@ -55,6 +57,19 @@ const DocumentCatalog = () => {
     setSortConfig({ key, direction });
   };
 
+  const handleEntriesChange = (event) => {
+    setEntriesPerPage(Number(event.target.value));
+    setCurrentPage(1); // エントリー数変更時に最初のページにリセット
+  };
+  
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = sortedData.slice(indexOfFirstEntry, indexOfLastEntry);
+
   return (
     <div className="document-catalog">
       <h1 className="main-title">行政文書目録</h1>
@@ -105,8 +120,9 @@ const DocumentCatalog = () => {
             </th>
           </tr>
         </thead>
+        {/*currentEntriesを使用してレンダリングロジックを更新*/}
         <tbody>
-          {sortedData.map((item, index) => (
+          {currentEntries.map((item, index) => (
             <tr key={index}>
               <td>{item.year}</td>
               <td>{item.number}</td>
@@ -117,6 +133,28 @@ const DocumentCatalog = () => {
             </tr>
           ))}
         </tbody>
+
+        {/* ページネーションコントロールを追加*/}
+        <div className="pagination">
+          <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+            前
+          </button>
+          {[...Array(Math.ceil(sortedData.length / entriesPerPage)).keys()].map(number => (
+            <button key={number + 1} onClick={() => handlePageChange(number + 1)} className={currentPage === number + 1 ? 'active' : ''}>
+              {number + 1}
+            </button>
+          ))}
+          <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === Math.ceil(sortedData.length / entriesPerPage)}>
+            次
+          </button>
+        </div>
+
+        {/* エントリー数変更用のドロップダウンを更新*/}
+        <select id="entries-dropdown" className="entries-dropdown" onChange={handleEntriesChange} value={entriesPerPage}>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
       </table>
     </div>
   );

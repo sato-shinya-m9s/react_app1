@@ -118,3 +118,29 @@
 .document-table tr:nth-child(odd) {
   background-color: #fff;
 }
+
+/* ページネーションコントロールのスタイルを追加 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background-color: #0056b3;
+}
