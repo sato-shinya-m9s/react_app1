@@ -37,19 +37,21 @@ const DocumentCatalog = () => {
     <div className="document-catalog">
       <h1 className="main-title">行政文書目録</h1>
       <p className="main-description">行政文書目録をこちらで確認することができます。</p>
-      <div className="filter-container">
+      <div className="control-panel">
         <button className="search-button">検索条件選択</button>
-        <div className="filter-section">
-          <label htmlFor="filter-input" className="filter-label">絞り込み:</label>
-          <input id="filter-input" className="filter-input" />
-        </div>
-        <div className="dropdown-section">
-          <label htmlFor="entries-dropdown" className="entries-label">表示:</label>
-          <select id="entries-dropdown" className="entries-dropdown">
-            <option>10</option>
-            <option>20</option>
-            <option>50</option>
-          </select>
+        <div className="right-controls">
+          <div className="filter-section">
+            <label htmlFor="filter-input" className="filter-label">絞り込み:</label>
+            <input id="filter-input" className="filter-input" />
+          </div>
+          <div className="dropdown-section">
+            <label htmlFor="entries-dropdown" className="entries-label">表示:</label>
+            <select id="entries-dropdown" className="entries-dropdown">
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+          </div>
         </div>
       </div>
       <table className="document-table">
