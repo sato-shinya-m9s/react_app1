@@ -85,10 +85,8 @@
 
 .document-table td,
 .document-table th {
-  /* 縦の線を消すためにボーダーを削除 */
-  border: none;
-  padding: 10px;
-  text-align: left;
+  border-bottom: 1px solid #ccc; /* 行の間にボーダーラインを表示 */
+  padding: 10px; /* セル内の余白を設定 */
 }
 
 .document-table th {
@@ -109,10 +107,14 @@
   color: #0056b3;
 }
 
-.document-table tr:nth-child(even) {
-  background-color: #f1f2f2;
+/* すべての表の行を白背景に設定し、行の間にボーダーラインを表示 */
+.document-table tr {
+  background-color: #fff; /* すべての行を白背景に設定 */
+  height: 50px; /* 行の高さを50pxに設定（必要に応じて調整） */
 }
 
+/* 交互の行の背景色を削除 */
+.document-table tr:nth-child(even),
 .document-table tr:nth-child(odd) {
   background-color: #fff;
 }
