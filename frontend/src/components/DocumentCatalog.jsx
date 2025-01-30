@@ -54,6 +54,15 @@ const DocumentCatalog = () => {
 
   return (
     <div className="document-catalog">
+      <header className="header">
+        <div className="header-logo">
+          <span className="header-logo-icon"></span>
+          <span className="header-logo-text">行政文書目録検索システム</span>
+        </div>
+        <nav className="header-nav">
+          <span className="header-nav-item">行政文書情報提供システム</span>
+        </nav>
+      </header>
       <h1 className="main-title">行政文書目録</h1>
       <p className="main-description">行政文書目録をこちらで確認することができます。</p>
       <div className="control-panel">
@@ -128,6 +137,9 @@ const DocumentCatalog = () => {
           次
         </button>
       </div>
+      <footer className="footer">
+        <span>©2024 NS Solutions Corporation</span>
+      </footer>
     </div>
   );
 };

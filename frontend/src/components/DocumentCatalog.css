@@ -5,6 +5,53 @@
   margin: 0 auto;
 }
 
+.header {
+  display: flex;
+  justify-content: flex-start; /* Align items to the start */
+  align-items: center;
+  background-color: #191970; /* Updated background color */
+  padding: 10px 20px;
+  color: #fff;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.header-logo-text {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+}
+
+.header-nav-item {
+  margin-left: 20px;
+  font-size: 14px;
+  color: #9797BF; /* Updated text color */
+}
+
+.footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #6C757D; /* Updated background color */
+  color: #FFFFFF; /* Updated text color */
+  margin-top: 20px;
+}
+
 .main-title {
   font-size: 24px;
   font-weight: 700;
