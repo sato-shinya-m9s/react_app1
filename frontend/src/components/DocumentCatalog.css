@@ -171,7 +171,7 @@
 /* ページネーションコントロールのスタイルを追加 */
 .pagination {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   margin-top: 20px;
 }
 
