@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 import './DocumentCatalog.css';
 
+const Modal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        {/* Modal content can be added here */}
+      </div>
+    </div>
+  );
+};
+
 const DocumentCatalog = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [filterText, setFilterText] = useState(''); // フィルタリング用の状態
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const data = Array.from({ length: 100 }, (_, index) => ({
     year: `令和${5 - Math.floor(index / 20)}年度`,
@@ -93,7 +110,7 @@ const DocumentCatalog = () => {
       <h1 className="main-title">行政文書目録</h1>
       <p className="main-description">行政文書目録をこちらで確認することができます。</p>
       <div className="control-panel">
-        <button className="search-button">検索条件選択</button>
+        <button className="search-button" onClick={toggleModal}>検索条件選択</button>
         <div className="right-controls">
           <div className="filter-section">
             <label htmlFor="filter-input" className="filter-label">絞り込み:</label>
@@ -174,6 +191,7 @@ const DocumentCatalog = () => {
           次
         </button>
       </div>
+      <Modal isOpen={isModalOpen} onClose={toggleModal} />
       <footer className="footer">
         <span>©2024 NS Solutions Corporation</span>
       </footer>
