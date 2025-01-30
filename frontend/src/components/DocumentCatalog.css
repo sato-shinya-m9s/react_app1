@@ -58,6 +58,8 @@
   color: #31363d;
   margin-bottom: 20px;
   text-align: left;
+  border-bottom: 2px solid #ccc; /* Add this line for the separator */
+  padding-bottom: 10px; /* Optional: Add some padding for spacing */
 }
 
 .main-description {
