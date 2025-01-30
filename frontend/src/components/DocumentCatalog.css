@@ -47,12 +47,16 @@
   color: #9797BF; /* Updated text color */
 }
 
+/* /frontend/src/components/DocumentCatalog.css */
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   text-align: center;
   padding: 10px 0;
-  background-color: #6C757D; /* Updated background color */
-  color: #FFFFFF; /* Updated text color */
-  margin-top: 20px;
+  background-color: #6C757D; /* 背景色を更新 */
+  color: #FFFFFF; /* 文字色を更新 */
 }
 
 .main-title {

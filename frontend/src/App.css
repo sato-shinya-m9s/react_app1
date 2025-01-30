@@ -1,9 +1,16 @@
 /* /frontend/src/App.css */
 #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   width: 100%; /* Ensure full width */
   margin: 0;
   padding: 6rem 2rem 2rem;
   text-align: center;
+}
+
+.App {
+  flex: 1; /* メインコンテンツが成長して利用可能なスペースを埋めるように */
 }
 
 .logo {
