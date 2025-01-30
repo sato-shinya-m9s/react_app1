@@ -73,12 +73,12 @@ const DocumentCatalog = () => {
             <input id="filter-input" className="filter-input" />
           </div>
           <div className="dropdown-section">
-            <label htmlFor="entries-dropdown" className="entries-label">表示:</label>
             <select id="entries-dropdown" className="entries-dropdown" onChange={handleEntriesChange} value={entriesPerPage}>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
             </select>
+            <label htmlFor="entries-dropdown" className="entries-label">件表示</label>
           </div>
         </div>
       </div>
