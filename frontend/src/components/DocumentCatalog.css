@@ -198,3 +198,10 @@
 .pagination button.active {
   background-color: #0056b3;
 }
+
+.pagination button.ellipsis {
+  background-color: #fff; /* Set background to white */
+  color: #007bff; /* Keep the text color consistent */
+  border: 1px solid #ccc; /* Add a border to match other buttons */
+  cursor: default; /* Change cursor to default as ellipsis is not clickable */
+}
