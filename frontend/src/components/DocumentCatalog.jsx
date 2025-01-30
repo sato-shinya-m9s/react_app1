@@ -5,6 +5,7 @@ const DocumentCatalog = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [filterText, setFilterText] = useState(''); // フィルタリング用の状態
 
   const data = Array.from({ length: 100 }, (_, index) => ({
     year: `令和${5 - Math.floor(index / 20)}年度`,
@@ -31,6 +32,11 @@ const DocumentCatalog = () => {
     return sortableItems;
   }, [data, sortConfig]);
 
+  // フィルタリングされたデータ
+  const filteredData = React.useMemo(() => {
+    return sortedData.filter(item => item.title.includes(filterText));
+  }, [sortedData, filterText]);
+
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -48,11 +54,15 @@ const DocumentCatalog = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+  };
+
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = sortedData.slice(indexOfFirstEntry, indexOfLastEntry);
+  const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
 
-  const totalPages = Math.ceil(sortedData.length / entriesPerPage);
+  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
   const pageNumbers = [];
 
   if (totalPages <= 5) {
@@ -87,7 +97,12 @@ const DocumentCatalog = () => {
         <div className="right-controls">
           <div className="filter-section">
             <label htmlFor="filter-input" className="filter-label">絞り込み:</label>
-            <input id="filter-input" className="filter-input" />
+            <input 
+              id="filter-input" 
+              className="filter-input" 
+              value={filterText} 
+              onChange={handleFilterChange} 
+            />
           </div>
           <div className="dropdown-section">
             <select id="entries-dropdown" className="entries-dropdown" onChange={handleEntriesChange} value={entriesPerPage}>
