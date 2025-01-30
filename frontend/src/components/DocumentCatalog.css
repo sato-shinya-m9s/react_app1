@@ -1,8 +1,8 @@
 /* /frontend/src/components/DocumentCatalog.css */
 .document-catalog {
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in the element's total width */
 }
 
 .header {

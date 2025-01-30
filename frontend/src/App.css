@@ -1,6 +1,7 @@
+/* /frontend/src/App.css */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%; /* Ensure full width */
+  margin: 0;
   padding: 2rem;
   text-align: center;
 }
