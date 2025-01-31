@@ -7,7 +7,57 @@ const Modal = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* Modal content can be added here */}
+        <h2 className="form-title">検索条件選択</h2>
+        <form className="search-form">
+          <div className="form-group">
+            <label>キーワード（AND条件）</label>
+            <input type="text" />
+          </div>
+          <div className="form-group">
+            <label>キーワード（OR条件）</label>
+            <input type="text" />
+          </div>
+          <div className="form-group">
+            <label>作成年度</label>
+            <select></select>
+          </div>
+          <div className="form-group">
+            <label>文書保有課</label>
+            <div className="sub-group">
+              <select></select>
+              <select></select>
+              <select></select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>文書分類</label>
+            <div className="sub-group">
+              <select></select>
+              <select></select>
+              <select></select>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>供覧・決裁完了年月</label>
+            <div className="sub-group">
+              <input type="text" />
+              <span>年</span>
+              <input type="text" />
+              <span>月</span>
+              <span>から</span>
+              <input type="text" />
+              <span>年</span>
+              <input type="text" />
+              <span>月</span>
+              <span>まで</span>
+            </div>
+          </div>
+          <div className="form-buttons">
+            <button type="button" onClick={onClose}>閉じる</button>
+            <button type="submit">検索</button>
+            <button type="reset">クリア</button>
+          </div>
+        </form>
       </div>
     </div>
   );
