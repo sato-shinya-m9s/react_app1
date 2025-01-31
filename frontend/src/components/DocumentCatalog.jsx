@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './DocumentCatalog.css';
 
 const Modal = ({ isOpen, onClose }) => {
@@ -63,89 +63,20 @@ const Modal = ({ isOpen, onClose }) => {
   );
 };
 
-const DocumentCatalog = () => {
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
-  const [filterText, setFilterText] = useState(''); // フィルタリング用の状態
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  const data = Array.from({ length: 100 }, (_, index) => ({
-    year: `令和${5 - Math.floor(index / 20)}年度`,
-    number: `総総第${String(index + 1).padStart(3, '0')}号`,
-    department: '〇〇局〇〇部〇〇課',
-    title: `ダミータイトル${index + 1}`,
-    date: `2023/${String((index % 12) + 1).padStart(2, '0')}/14`,
-    duration: `${(index % 5) + 1}年`
-  }));
-
-  const sortedData = React.useMemo(() => {
-    let sortableItems = [...data];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [data, sortConfig]);
-
-  // フィルタリングされたデータ
-  const filteredData = React.useMemo(() => {
-    return sortedData.filter(item => item.title.includes(filterText));
-  }, [sortedData, filterText]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const handleEntriesChange = (event) => {
-    setEntriesPerPage(Number(event.target.value));
-    setCurrentPage(1); // エントリー数変更時に最初のページにリセット
-  };
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilterText(event.target.value);
-  };
-
-  const indexOfLastEntry = currentPage * entriesPerPage;
-  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
-
-  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
-  const pageNumbers = [];
-
-  if (totalPages <= 5) {
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
-    }
-  } else {
-    if (currentPage <= 3) {
-      pageNumbers.push(1, 2, 3, 4, '...', totalPages);
-    } else if (currentPage >= totalPages - 2) {
-      pageNumbers.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-    } else {
-      pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-    }
-  }
-
+const DocumentCatalogPresentational = ({
+  toggleModal,
+  isModalOpen,
+  filterText,
+  handleFilterChange,
+  entriesPerPage,
+  handleEntriesChange,
+  currentEntries,
+  requestSort,
+  currentPage,
+  handlePageChange,
+  pageNumbers,
+  totalPages
+}) => {
   return (
     <div className="document-catalog">
       <header className="header">
@@ -246,6 +177,106 @@ const DocumentCatalog = () => {
         <span>©2024 NS Solutions Corporation</span>
       </footer>
     </div>
+  );
+};
+
+const DocumentCatalog = () => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [filterText, setFilterText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const data = Array.from({ length: 100 }, (_, index) => ({
+    year: `令和${5 - Math.floor(index / 20)}年度`,
+    number: `総総第${String(index + 1).padStart(3, '0')}号`,
+    department: '〇〇局〇〇部〇〇課',
+    title: `ダミータイトル${index + 1}`,
+    date: `2023/${String((index % 12) + 1).padStart(2, '0')}/14`,
+    duration: `${(index % 5) + 1}年`
+  }));
+
+  const sortedData = useMemo(() => {
+    let sortableItems = [...data];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [data, sortConfig]);
+
+  const filteredData = useMemo(() => {
+    return sortedData.filter(item => item.title.includes(filterText));
+  }, [sortedData, filterText]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const handleEntriesChange = (event) => {
+    setEntriesPerPage(Number(event.target.value));
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+  };
+
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
+
+  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
+  const pageNumbers = [];
+
+  if (totalPages <= 5) {
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+  } else {
+    if (currentPage <= 3) {
+      pageNumbers.push(1, 2, 3, 4, '...', totalPages);
+    } else if (currentPage >= totalPages - 2) {
+      pageNumbers.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+      pageNumbers.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+    }
+  }
+
+  return (
+    <DocumentCatalogPresentational
+      toggleModal={toggleModal}
+      isModalOpen={isModalOpen}
+      filterText={filterText}
+      handleFilterChange={handleFilterChange}
+      entriesPerPage={entriesPerPage}
+      handleEntriesChange={handleEntriesChange}
+      currentEntries={currentEntries}
+      requestSort={requestSort}
+      currentPage={currentPage}
+      handlePageChange={handlePageChange}
+      pageNumbers={pageNumbers}
+      totalPages={totalPages}
+    />
   );
 };
 
