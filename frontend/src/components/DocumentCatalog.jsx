@@ -24,16 +24,22 @@ const Modal = ({ isOpen, onClose }) => {
           <div className="form-group">
             <label>文書保有課</label>
             <div className="sub-group">
+              <label>局</label>
               <select></select>
+              <label>部</label>
               <select></select>
+              <label>課</label>
               <select></select>
             </div>
           </div>
           <div className="form-group">
             <label>文書分類</label>
             <div className="sub-group">
+              <label>大分類</label>
               <select></select>
+              <label>中分類</label>
               <select></select>
+              <label>小分類</label>
               <select></select>
             </div>
           </div>
