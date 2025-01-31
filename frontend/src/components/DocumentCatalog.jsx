@@ -4,6 +4,47 @@ import './DocumentCatalog.css';
 const Modal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
+  const yearOptions = [
+    { era: '平成', year: 1 },
+    { era: '平成', year: 2 },
+    { era: '平成', year: 3 },
+    { era: '平成', year: 4 },
+    { era: '平成', year: 5 },
+    { era: '平成', year: 6 },
+    { era: '平成', year: 7 },
+    { era: '平成', year: 8 },
+    { era: '平成', year: 9 },
+    { era: '平成', year: 10 },
+    { era: '平成', year: 11 },
+    { era: '平成', year: 12 },
+    { era: '平成', year: 13 },
+    { era: '平成', year: 14 },
+    { era: '平成', year: 15 },
+    { era: '平成', year: 16 },
+    { era: '平成', year: 17 },
+    { era: '平成', year: 18 },
+    { era: '平成', year: 19 },
+    { era: '平成', year: 20 },
+    { era: '平成', year: 21 },
+    { era: '平成', year: 22 },
+    { era: '平成', year: 23 },
+    { era: '平成', year: 24 },
+    { era: '平成', year: 25 },
+    { era: '平成', year: 26 },
+    { era: '平成', year: 27 },
+    { era: '平成', year: 28 },
+    { era: '平成', year: 29 },
+    { era: '平成', year: 30 },
+    { era: '平成', year: 31 },
+    { era: '令和', year: 1 },
+    { era: '令和', year: 2 },
+    { era: '令和', year: 3 },
+    { era: '令和', year: 4 },
+    { era: '令和', year: 5 },
+    { era: '令和', year: 6 },
+    { era: '令和', year: 7 },
+  ].reverse();
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -19,7 +60,14 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
           <div className="form-group">
             <label>作成年度</label>
-            <select></select>
+            <select>
+              <option value=""></option>
+              {yearOptions.map((option, index) => (
+                <option key={index} value={`${option.era}${option.year}`}>
+                  {option.era}{option.year}年
+                </option>
+              ))}
+            </select>
           </div>
           <div className="form-group">
             <label>文書保有課</label>
