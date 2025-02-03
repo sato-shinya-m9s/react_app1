@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import './DocumentCatalog.css';
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose, onSearch }) => {
   if (!isOpen) return null;
 
   const yearOptions = [
@@ -45,22 +45,41 @@ const Modal = ({ isOpen, onClose }) => {
     { era: '令和', year: 7 },
   ].reverse();
 
+  const [andKeywords, setAndKeywords] = useState('');
+  const [orKeywords, setOrKeywords] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [documentCategory, setDocumentCategory] = useState(''); // 文書分類の状態を追加
+  const [departmentSelections, setDepartmentSelections] = useState({ bureau: '', department: '', section: '' });
+  const [completionDateRange, setCompletionDateRange] = useState({ startYear: '', startMonth: '', endYear: '', endMonth: '' });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSearch({
+      andKeywords,
+      orKeywords,
+      selectedYear,
+      documentCategory, // 文書分類を検索条件に追加
+      departmentSelections,
+      completionDateRange
+    });
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="form-title">検索条件選択</h2>
-        <form className="search-form">
+        <form className="search-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>キーワード（AND条件）</label>
-            <input type="text" className='keyword-input'/>
+            <input type="text" className='keyword-input' onChange={(e) => setAndKeywords(e.target.value)} />
           </div>
           <div className="form-group">
             <label>キーワード（OR条件）</label>
-            <input type="text" className='keyword-input'/>
+            <input type="text" className='keyword-input' onChange={(e) => setOrKeywords(e.target.value)} />
           </div>
           <div className="form-group">
             <label>作成年度</label>
-            <select className='sakuseinendo-select'>
+            <select className='sakuseinendo-select' onChange={(e) => setSelectedYear(e.target.value)}>
               <option value=""></option>
               {yearOptions.map((option, index) => (
                 <option key={index} value={`${option.era}${option.year}`}>
@@ -73,17 +92,17 @@ const Modal = ({ isOpen, onClose }) => {
             <label>文書保有課</label>
             <div className="bunshohoyuka-sub-group">
               <label>局</label>
-              <select>
+              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, bureau: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
               <label>部</label>
-              <select>
+              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, department: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
               <label>課</label>
-              <select>
+              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, section: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
@@ -109,14 +128,14 @@ const Modal = ({ isOpen, onClose }) => {
           <div className="form-group">
             <label>供覧・決裁完了年月</label>
             <div className="sub-group">
-              <input type="text" className='year-input'/>
+              <input type="text" className='year-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startYear: e.target.value }))} />
               <span className='year-month-span'>年</span>
-              <input type="text" className='month-input'/>
+              <input type="text" className='month-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startMonth: e.target.value }))} />
               <span className='year-month-span'>月</span>
               <span className='kara-span'>から</span>
-              <input type="text" className='year-input'/>
+              <input type="text" className='year-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endYear: e.target.value }))} />
               <span className='year-month-span'>年</span>
-              <input type="text" className='month-input'/>
+              <input type="text" className='month-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endMonth: e.target.value }))} />
               <span className='year-month-span'>月</span>
               <span className='made-span'>まで</span>
             </div>
@@ -144,7 +163,8 @@ const DocumentCatalogPresentational = ({
   currentPage,
   handlePageChange,
   pageNumbers,
-  totalPages
+  totalPages,
+  handleSearch
 }) => {
   return (
     <div className="document-catalog">
@@ -241,7 +261,7 @@ const DocumentCatalogPresentational = ({
           次
         </button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={toggleModal} />
+      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} />
       <footer className="footer">
         <span>©2024 NS Solutions Corporation</span>
       </footer>
@@ -255,6 +275,7 @@ const DocumentCatalog = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [filterText, setFilterText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredData, setFilteredData] = useState([]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -285,10 +306,6 @@ const DocumentCatalog = () => {
     return sortableItems;
   }, [data, sortConfig]);
 
-  const filteredData = useMemo(() => {
-    return sortedData.filter(item => item.title.includes(filterText));
-  }, [sortedData, filterText]);
-
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -296,6 +313,48 @@ const DocumentCatalog = () => {
     }
     setSortConfig({ key, direction });
   };
+
+  const handleSearch = (searchCriteria) => {
+    const { andKeywords, orKeywords, selectedYear, departmentSelections, completionDateRange } = searchCriteria;
+
+    const andKeywordsArray = andKeywords.split(' ').filter(Boolean);
+    const orKeywordsArray = orKeywords.split(' ').filter(Boolean);
+    const departmentArray = [
+      departmentSelections.bureau && `${departmentSelections.bureau}局`,
+      departmentSelections.department && `${departmentSelections.department}部`,
+      departmentSelections.section && `${departmentSelections.section}課`
+    ].filter(Boolean);
+
+    const filteredData = sortedData.filter(item => {
+      const matchesAndKeywords = andKeywordsArray.every(keyword => item.title.includes(keyword));
+      const matchesOrKeywords = orKeywordsArray.length === 0 || orKeywordsArray.some(keyword => item.title.includes(keyword));
+      const matchesYear = !selectedYear || item.year.includes(selectedYear);
+      const matchesDepartment = departmentArray.every(dept => item.department.includes(dept));
+      const matchesCompletionDate = (() => {
+        const [itemYear, itemMonth] = item.date.split('/').map(Number);
+        const startYear = Number(completionDateRange.startYear);
+        const startMonth = Number(completionDateRange.startMonth);
+        const endYear = Number(completionDateRange.endYear);
+        const endMonth = Number(completionDateRange.endMonth);
+
+        const itemDateValue = itemYear * 12 + itemMonth;
+        const startDateValue = startYear * 12 + startMonth;
+        const endDateValue = endYear * 12 + endMonth;
+
+        return (!startYear || itemDateValue >= startDateValue) && (!endYear || itemDateValue <= endDateValue);
+      })();
+
+      return matchesAndKeywords && matchesOrKeywords && matchesYear && matchesDepartment && matchesCompletionDate;
+    });
+
+    setFilterText(''); // フィルターテキストをクリア
+    setCurrentPage(1); // 最初のページにリセット
+    setFilteredData(filteredData); // フィルタリングされたデータを更新
+  };
+
+  const filteredEntries = useMemo(() => {
+    return filteredData.length > 0 ? filteredData : sortedData;
+  }, [filteredData, sortedData]);
 
   const handleEntriesChange = (event) => {
     setEntriesPerPage(Number(event.target.value));
@@ -312,9 +371,9 @@ const DocumentCatalog = () => {
 
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = filteredData.slice(indexOfFirstEntry, indexOfLastEntry);
+  const currentEntries = filteredEntries.slice(indexOfFirstEntry, indexOfLastEntry);
 
-  const totalPages = Math.ceil(filteredData.length / entriesPerPage);
+  const totalPages = Math.ceil(filteredEntries.length / entriesPerPage);
   const pageNumbers = [];
 
   if (totalPages <= 5) {
@@ -345,6 +404,7 @@ const DocumentCatalog = () => {
       handlePageChange={handlePageChange}
       pageNumbers={pageNumbers}
       totalPages={totalPages}
+      handleSearch={handleSearch}
     />
   );
 };
