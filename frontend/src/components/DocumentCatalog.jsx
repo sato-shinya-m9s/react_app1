@@ -52,15 +52,15 @@ const Modal = ({ isOpen, onClose }) => {
         <form className="search-form">
           <div className="form-group">
             <label>キーワード（AND条件）</label>
-            <input type="text" />
+            <input type="text" className='keyword-input'/>
           </div>
           <div className="form-group">
             <label>キーワード（OR条件）</label>
-            <input type="text" />
+            <input type="text" className='keyword-input'/>
           </div>
           <div className="form-group">
             <label>作成年度</label>
-            <select>
+            <select className='sakuseinendo-select'>
               <option value=""></option>
               {yearOptions.map((option, index) => (
                 <option key={index} value={`${option.era}${option.year}`}>
@@ -71,7 +71,7 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
           <div className="form-group">
             <label>文書保有課</label>
-            <div className="sub-group">
+            <div className="bunshohoyuka-sub-group">
               <label>局</label>
               <select></select>
               <label>部</label>
@@ -82,28 +82,34 @@ const Modal = ({ isOpen, onClose }) => {
           </div>
           <div className="form-group">
             <label>文書分類</label>
-            <div className="sub-group">
-              <label>大分類</label>
-              <select></select>
-              <label>中分類</label>
-              <select></select>
-              <label>小分類</label>
-              <select></select>
+            <div className="bunshobunrui-sub-group">
+              <div className='select-sub-group'>
+                <label>大分類</label>
+                <select></select>
+              </div>
+              <div className='select-sub-group'>
+                <label>中分類</label>
+                <select></select>
+              </div>
+              <div className='select-sub-group'>
+                <label>小分類</label>
+                <select></select>
+              </div>
             </div>
           </div>
           <div className="form-group">
             <label>供覧・決裁完了年月</label>
             <div className="sub-group">
-              <input type="text" />
-              <span>年</span>
-              <input type="text" />
-              <span>月</span>
-              <span>から</span>
-              <input type="text" />
-              <span>年</span>
-              <input type="text" />
-              <span>月</span>
-              <span>まで</span>
+              <input type="text" className='year-input'/>
+              <span className='year-month-span'>年</span>
+              <input type="text" className='month-input'/>
+              <span className='year-month-span'>月</span>
+              <span className='kara-span'>から</span>
+              <input type="text" className='year-input'/>
+              <span className='year-month-span'>年</span>
+              <input type="text" className='month-input'/>
+              <span className='year-month-span'>月</span>
+              <span className='made-span'>まで</span>
             </div>
           </div>
           <div className="form-buttons">
