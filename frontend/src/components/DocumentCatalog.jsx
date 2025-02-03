@@ -73,11 +73,20 @@ const Modal = ({ isOpen, onClose }) => {
             <label>文書保有課</label>
             <div className="bunshohoyuka-sub-group">
               <label>局</label>
-              <select></select>
+              <select>
+                <option value=""></option>
+                <option value="〇〇">〇〇</option>
+              </select>
               <label>部</label>
-              <select></select>
+              <select>
+                <option value=""></option>
+                <option value="〇〇">〇〇</option>
+              </select>
               <label>課</label>
-              <select></select>
+              <select>
+                <option value=""></option>
+                <option value="〇〇">〇〇</option>
+              </select>
             </div>
           </div>
           <div className="form-group">
