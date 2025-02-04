@@ -170,6 +170,7 @@ const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria })
     };
     setSearchCriteria(newCriteria);
     onSearch(newCriteria);
+    onClose();
   };
 
   return (
