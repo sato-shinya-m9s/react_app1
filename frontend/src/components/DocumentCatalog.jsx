@@ -399,10 +399,12 @@ const DocumentCatalog = () => {
         return (!startYear || itemDateValue >= startDateValue) && (!endYear || itemDateValue <= endDateValue);
       })();
 
-      return matchesAndKeywords && matchesOrKeywords && matchesYear && matchesDepartment && matchesCompletionDate;
+      // filterTextの値がタイトルに部分一致するかどうかを確認
+      const matchesFilterText = !filterText || item.title.includes(filterText);
+
+      return matchesAndKeywords && matchesOrKeywords && matchesYear && matchesDepartment && matchesCompletionDate && matchesFilterText;
     });
 
-    setFilterText(''); // フィルターテキストをクリア
     setCurrentPage(1); // 最初のページにリセット
     setFilteredData(filteredData); // フィルタリングされたデータを更新
   };
