@@ -2,70 +2,26 @@
 import React, { useState, useMemo } from 'react';
 import './DocumentCatalog.css';
 
-const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria }) => {
+const ModalPresentational = ({
+  isOpen,
+  onClose,
+  onSearch,
+  andKeywords,
+  orKeywords,
+  selectedYear,
+  documentCategory,
+  departmentSelections,
+  completionDateRange,
+  setAndKeywords,
+  setOrKeywords,
+  setSelectedYear,
+  setDocumentCategory,
+  setDepartmentSelections,
+  setCompletionDateRange,
+  handleSubmit,
+  yearOptions
+}) => {
   if (!isOpen) return null;
-
-  const yearOptions = [
-    { era: '平成', year: 1 },
-    { era: '平成', year: 2 },
-    { era: '平成', year: 3 },
-    { era: '平成', year: 4 },
-    { era: '平成', year: 5 },
-    { era: '平成', year: 6 },
-    { era: '平成', year: 7 },
-    { era: '平成', year: 8 },
-    { era: '平成', year: 9 },
-    { era: '平成', year: 10 },
-    { era: '平成', year: 11 },
-    { era: '平成', year: 12 },
-    { era: '平成', year: 13 },
-    { era: '平成', year: 14 },
-    { era: '平成', year: 15 },
-    { era: '平成', year: 16 },
-    { era: '平成', year: 17 },
-    { era: '平成', year: 18 },
-    { era: '平成', year: 19 },
-    { era: '平成', year: 20 },
-    { era: '平成', year: 21 },
-    { era: '平成', year: 22 },
-    { era: '平成', year: 23 },
-    { era: '平成', year: 24 },
-    { era: '平成', year: 25 },
-    { era: '平成', year: 26 },
-    { era: '平成', year: 27 },
-    { era: '平成', year: 28 },
-    { era: '平成', year: 29 },
-    { era: '平成', year: 30 },
-    { era: '平成', year: 31 },
-    { era: '令和', year: 1 },
-    { era: '令和', year: 2 },
-    { era: '令和', year: 3 },
-    { era: '令和', year: 4 },
-    { era: '令和', year: 5 },
-    { era: '令和', year: 6 },
-    { era: '令和', year: 7 },
-  ].reverse();
-
-  const [andKeywords, setAndKeywords] = useState(searchCriteria.andKeywords);
-  const [orKeywords, setOrKeywords] = useState(searchCriteria.orKeywords);
-  const [selectedYear, setSelectedYear] = useState(searchCriteria.selectedYear);
-  const [documentCategory, setDocumentCategory] = useState(searchCriteria.documentCategory);
-  const [departmentSelections, setDepartmentSelections] = useState(searchCriteria.departmentSelections);
-  const [completionDateRange, setCompletionDateRange] = useState(searchCriteria.completionDateRange);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const newCriteria = {
-      andKeywords,
-      orKeywords,
-      selectedYear,
-      documentCategory,
-      departmentSelections,
-      completionDateRange
-    };
-    setSearchCriteria(newCriteria);
-    onSearch(newCriteria);
-  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -151,6 +107,91 @@ const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria })
         </form>
       </div>
     </div>
+  );
+};
+const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria }) => {
+  const yearOptions = [
+    { era: '平成', year: 1 },
+    { era: '平成', year: 2 },
+    { era: '平成', year: 3 },
+    { era: '平成', year: 4 },
+    { era: '平成', year: 5 },
+    { era: '平成', year: 6 },
+    { era: '平成', year: 7 },
+    { era: '平成', year: 8 },
+    { era: '平成', year: 9 },
+    { era: '平成', year: 10 },
+    { era: '平成', year: 11 },
+    { era: '平成', year: 12 },
+    { era: '平成', year: 13 },
+    { era: '平成', year: 14 },
+    { era: '平成', year: 15 },
+    { era: '平成', year: 16 },
+    { era: '平成', year: 17 },
+    { era: '平成', year: 18 },
+    { era: '平成', year: 19 },
+    { era: '平成', year: 20 },
+    { era: '平成', year: 21 },
+    { era: '平成', year: 22 },
+    { era: '平成', year: 23 },
+    { era: '平成', year: 24 },
+    { era: '平成', year: 25 },
+    { era: '平成', year: 26 },
+    { era: '平成', year: 27 },
+    { era: '平成', year: 28 },
+    { era: '平成', year: 29 },
+    { era: '平成', year: 30 },
+    { era: '平成', year: 31 },
+    { era: '令和', year: 1 },
+    { era: '令和', year: 2 },
+    { era: '令和', year: 3 },
+    { era: '令和', year: 4 },
+    { era: '令和', year: 5 },
+    { era: '令和', year: 6 },
+    { era: '令和', year: 7 },
+  ].reverse();
+
+  const [andKeywords, setAndKeywords] = useState(searchCriteria.andKeywords);
+  const [orKeywords, setOrKeywords] = useState(searchCriteria.orKeywords);
+  const [selectedYear, setSelectedYear] = useState(searchCriteria.selectedYear);
+  const [documentCategory, setDocumentCategory] = useState(searchCriteria.documentCategory);
+  const [departmentSelections, setDepartmentSelections] = useState(searchCriteria.departmentSelections);
+  const [completionDateRange, setCompletionDateRange] = useState(searchCriteria.completionDateRange);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newCriteria = {
+      andKeywords,
+      orKeywords,
+      selectedYear,
+      documentCategory,
+      departmentSelections,
+      completionDateRange
+    };
+    setSearchCriteria(newCriteria);
+    onSearch(newCriteria);
+  };
+
+  return (
+    <ModalPresentational
+      isOpen={isOpen}
+      onClose={onClose}
+      onSearch={onSearch}
+      andKeywords={andKeywords}
+      orKeywords={orKeywords}
+      selectedYear={selectedYear}
+      documentCategory={documentCategory}
+      departmentSelections={departmentSelections}
+      completionDateRange={completionDateRange}
+      setAndKeywords={setAndKeywords}
+      setOrKeywords={setOrKeywords}
+      setSelectedYear={setSelectedYear}
+      setDocumentCategory={setDocumentCategory}
+      setDepartmentSelections={setDepartmentSelections}
+      setCompletionDateRange={setCompletionDateRange}
+      handleSubmit={handleSubmit}
+      yearOptions={yearOptions}
+    />
   );
 };
 
