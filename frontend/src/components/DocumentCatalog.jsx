@@ -1,7 +1,8 @@
+
 import React, { useState, useMemo } from 'react';
 import './DocumentCatalog.css';
 
-const Modal = ({ isOpen, onClose, onSearch }) => {
+const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria }) => {
   if (!isOpen) return null;
 
   const yearOptions = [
@@ -45,23 +46,25 @@ const Modal = ({ isOpen, onClose, onSearch }) => {
     { era: '令和', year: 7 },
   ].reverse();
 
-  const [andKeywords, setAndKeywords] = useState('');
-  const [orKeywords, setOrKeywords] = useState('');
-  const [selectedYear, setSelectedYear] = useState('');
-  const [documentCategory, setDocumentCategory] = useState(''); // 文書分類の状態を追加
-  const [departmentSelections, setDepartmentSelections] = useState({ bureau: '', department: '', section: '' });
-  const [completionDateRange, setCompletionDateRange] = useState({ startYear: '', startMonth: '', endYear: '', endMonth: '' });
+  const [andKeywords, setAndKeywords] = useState(searchCriteria.andKeywords);
+  const [orKeywords, setOrKeywords] = useState(searchCriteria.orKeywords);
+  const [selectedYear, setSelectedYear] = useState(searchCriteria.selectedYear);
+  const [documentCategory, setDocumentCategory] = useState(searchCriteria.documentCategory);
+  const [departmentSelections, setDepartmentSelections] = useState(searchCriteria.departmentSelections);
+  const [completionDateRange, setCompletionDateRange] = useState(searchCriteria.completionDateRange);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSearch({
+    const newCriteria = {
       andKeywords,
       orKeywords,
       selectedYear,
-      documentCategory, // 文書分類を検索条件に追加
+      documentCategory,
       departmentSelections,
       completionDateRange
-    });
+    };
+    setSearchCriteria(newCriteria);
+    onSearch(newCriteria);
   };
 
   return (
@@ -71,15 +74,15 @@ const Modal = ({ isOpen, onClose, onSearch }) => {
         <form className="search-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>キーワード（AND条件）</label>
-            <input type="text" className='keyword-input' onChange={(e) => setAndKeywords(e.target.value)} />
+            <input type="text" className='keyword-input' value={andKeywords} onChange={(e) => setAndKeywords(e.target.value)} />
           </div>
           <div className="form-group">
             <label>キーワード（OR条件）</label>
-            <input type="text" className='keyword-input' onChange={(e) => setOrKeywords(e.target.value)} />
+            <input type="text" className='keyword-input' value={orKeywords} onChange={(e) => setOrKeywords(e.target.value)} />
           </div>
           <div className="form-group">
             <label>作成年度</label>
-            <select className='sakuseinendo-select' onChange={(e) => setSelectedYear(e.target.value)}>
+            <select className='sakuseinendo-select' value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
               <option value=""></option>
               {yearOptions.map((option, index) => (
                 <option key={index} value={`${option.era}${option.year}`}>
@@ -92,17 +95,17 @@ const Modal = ({ isOpen, onClose, onSearch }) => {
             <label>文書保有課</label>
             <div className="bunshohoyuka-sub-group">
               <label>局</label>
-              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, bureau: e.target.value }))}>
+              <select value={departmentSelections.bureau} onChange={(e) => setDepartmentSelections(prev => ({ ...prev, bureau: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
               <label>部</label>
-              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, department: e.target.value }))}>
+              <select value={departmentSelections.department} onChange={(e) => setDepartmentSelections(prev => ({ ...prev, department: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
               <label>課</label>
-              <select onChange={(e) => setDepartmentSelections(prev => ({ ...prev, section: e.target.value }))}>
+              <select value={departmentSelections.section} onChange={(e) => setDepartmentSelections(prev => ({ ...prev, section: e.target.value }))}>
                 <option value=""></option>
                 <option value="〇〇">〇〇</option>
               </select>
@@ -128,14 +131,14 @@ const Modal = ({ isOpen, onClose, onSearch }) => {
           <div className="form-group">
             <label>供覧・決裁完了年月</label>
             <div className="sub-group">
-              <input type="text" className='year-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startYear: e.target.value }))} />
+              <input type="text" className='year-input' value={completionDateRange.startYear} onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startYear: e.target.value }))} />
               <span className='year-month-span'>年</span>
-              <input type="text" className='month-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startMonth: e.target.value }))} />
+              <input type="text" className='month-input' value={completionDateRange.startMonth} onChange={(e) => setCompletionDateRange(prev => ({ ...prev, startMonth: e.target.value }))} />
               <span className='year-month-span'>月</span>
               <span className='kara-span'>から</span>
-              <input type="text" className='year-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endYear: e.target.value }))} />
+              <input type="text" className='year-input' value={completionDateRange.endYear} onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endYear: e.target.value }))} />
               <span className='year-month-span'>年</span>
-              <input type="text" className='month-input' onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endMonth: e.target.value }))} />
+              <input type="text" className='month-input' value={completionDateRange.endMonth} onChange={(e) => setCompletionDateRange(prev => ({ ...prev, endMonth: e.target.value }))} />
               <span className='year-month-span'>月</span>
               <span className='made-span'>まで</span>
             </div>
@@ -164,7 +167,9 @@ const DocumentCatalogPresentational = ({
   handlePageChange,
   pageNumbers,
   totalPages,
-  handleSearch
+  handleSearch,
+  searchCriteria,
+  setSearchCriteria
 }) => {
   return (
     <div className="document-catalog">
@@ -261,7 +266,7 @@ const DocumentCatalogPresentational = ({
           次
         </button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} />
+      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria} />
       <footer className="footer">
         <span>©2024 NS Solutions Corporation</span>
       </footer>
@@ -276,6 +281,14 @@ const DocumentCatalog = () => {
   const [filterText, setFilterText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState({
+    andKeywords: '',
+    orKeywords: '',
+    selectedYear: '',
+    documentCategory: '',
+    departmentSelections: { bureau: '', department: '', section: '' },
+    completionDateRange: { startYear: '', startMonth: '', endYear: '', endMonth: '' }
+  });
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -405,6 +418,8 @@ const DocumentCatalog = () => {
       pageNumbers={pageNumbers}
       totalPages={totalPages}
       handleSearch={handleSearch}
+      searchCriteria={searchCriteria}
+      setSearchCriteria={setSearchCriteria}
     />
   );
 };
