@@ -18,6 +18,7 @@ const ModalPresentational = ({
   setDocumentCategory,
   setDepartmentSelections,
   setCompletionDateRange,
+  handleReset,
   handleSubmit,
   yearOptions
 }) => {
@@ -102,7 +103,7 @@ const ModalPresentational = ({
           <div className="form-buttons">
             <button type="button" onClick={onClose}>閉じる</button>
             <button type="submit">検索</button>
-            <button type="reset">クリア</button>
+            <button type="button" onClick={handleReset}>クリア</button>
           </div>
         </form>
       </div>
@@ -173,6 +174,27 @@ const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria, f
     onClose();
   };
 
+  // Function to reset search criteria and close the modal
+  const handleReset = () => {
+    const resetCriteria = {
+      andKeywords: '',
+      orKeywords: '',
+      selectedYear: '',
+      documentCategory: '',
+      departmentSelections: { bureau: '', department: '', section: '' },
+      completionDateRange: { startYear: '', startMonth: '', endYear: '', endMonth: '' }
+    };
+    setAndKeywords('');
+    setOrKeywords('');
+    setSelectedYear('');
+    setDocumentCategory('');
+    setDepartmentSelections({ bureau: '', department: '', section: '' });
+    setCompletionDateRange({ startYear: '', startMonth: '', endYear: '', endMonth: '' });
+    setSearchCriteria(resetCriteria);
+    onSearch(resetCriteria);
+    onClose();
+  };
+
   return (
     <ModalPresentational
       isOpen={isOpen}
@@ -190,6 +212,7 @@ const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria, f
       setDocumentCategory={setDocumentCategory}
       setDepartmentSelections={setDepartmentSelections}
       setCompletionDateRange={setCompletionDateRange}
+      handleReset={handleReset}
       handleSubmit={handleSubmit}
       yearOptions={yearOptions}
     />
