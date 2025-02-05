@@ -334,6 +334,11 @@
   padding: 10px; /* セル内の余白を設定 */
 }
 
+.document-table td.title-cell {
+  color: #0D6EFD;
+  cursor: pointer; /* Ensure it looks clickable */
+}
+
 .document-table th {
   background-color: #E2E3E5;
   color: #31363d;
@@ -362,6 +367,13 @@
 .document-table tr:nth-child(even),
 .document-table tr:nth-child(odd) {
   background-color: #fff;
+}
+
+.document-category-display {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
 }
 
 /* ページネーションコントロールのスタイルを追加 */

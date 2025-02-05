@@ -210,7 +210,9 @@ const DocumentCatalogPresentational = ({
   totalPages,
   handleSearch,
   searchCriteria,
-  setSearchCriteria
+  setSearchCriteria,
+  selectedRowIndex,
+  handleTitleClick
 }) => {
   return (
     <div className="document-catalog">
@@ -282,7 +284,14 @@ const DocumentCatalogPresentational = ({
               <td>{item.year}</td>
               <td>{item.number}</td>
               <td>{item.department}</td>
-              <td>{item.title}</td>
+              <td className="title-cell" onClick={() => handleTitleClick(index)}>
+                {item.title}
+                {selectedRowIndex === index && (
+                  <div className="document-category-display">
+                    文書分類: {item.category.largeCategory} ー {item.category.mediumCategory} ー {item.category.smallCategory}
+                  </div>
+                )}
+              </td>
               <td>{item.date}</td>
               <td>{item.duration}</td>
             </tr>
@@ -307,7 +316,7 @@ const DocumentCatalogPresentational = ({
           次
         </button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria}　filterText={filterText} />
+      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria} filterText={filterText} />
       <footer className="footer">
         <span>©2024 NS Solutions Corporation</span>
       </footer>
@@ -330,6 +339,7 @@ const DocumentCatalog = () => {
     departmentSelections: { bureau: '', department: '', section: '' },
     completionDateRange: { startYear: '', startMonth: '', endYear: '', endMonth: '' }
   });
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null); // State to track selected row
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -342,7 +352,7 @@ const DocumentCatalog = () => {
     title: `ダミータイトル${index + 1}`,
     date: `2023/${String((index % 12) + 1).padStart(2, '0')}/14`,
     duration: `${(index % 5) + 1}年`,
-    documentClassification: {
+    category: {
       largeCategory: '総務',
       mediumCategory: '庶務',
       smallCategory: '広報広聴'
@@ -373,9 +383,13 @@ const DocumentCatalog = () => {
     setSortConfig({ key, direction });
   };
 
+  const handleTitleClick = (index) => {
+    setSelectedRowIndex(index === selectedRowIndex ? null : index); // Toggle selection
+  };
+
   const handleSearch = (searchCriteria) => {
     const { andKeywords, orKeywords, selectedYear, departmentSelections, completionDateRange, filterText } = searchCriteria;
-  
+
     const andKeywordsArray = andKeywords.split(' ').filter(Boolean);
     const orKeywordsArray = orKeywords.split(' ').filter(Boolean);
     const departmentArray = [
@@ -383,7 +397,7 @@ const DocumentCatalog = () => {
       departmentSelections.department && `${departmentSelections.department}部`,
       departmentSelections.section && `${departmentSelections.section}課`
     ].filter(Boolean);
-  
+
     const filteredData = sortedData.filter(item => {
       const matchesAndKeywords = andKeywordsArray.every(keyword => item.title.includes(keyword));
       const matchesOrKeywords = orKeywordsArray.length === 0 || orKeywordsArray.some(keyword => item.title.includes(keyword));
@@ -395,22 +409,21 @@ const DocumentCatalog = () => {
         const startMonth = Number(completionDateRange.startMonth);
         const endYear = Number(completionDateRange.endYear);
         const endMonth = Number(completionDateRange.endMonth);
-  
+
         const itemDateValue = itemYear * 12 + itemMonth;
         const startDateValue = startYear * 12 + startMonth;
         const endDateValue = endYear * 12 + endMonth;
-  
+
         return (!startYear || itemDateValue >= startDateValue) && (!endYear || itemDateValue <= endDateValue);
       })();
-  
-      // filterTextの値がタイトルに部分一致するかどうかを確認
+
       const matchesFilterText = !filterText || item.title.includes(filterText);
-  
+
       return matchesAndKeywords && matchesOrKeywords && matchesYear && matchesDepartment && matchesCompletionDate && matchesFilterText;
     });
-  
-    setCurrentPage(1); // 最初のページにリセット
-    setFilteredData(filteredData); // フィルタリングされたデータを更新
+
+    setCurrentPage(1);
+    setFilteredData(filteredData);
   };
 
   const filteredEntries = useMemo(() => {
@@ -470,6 +483,8 @@ const DocumentCatalog = () => {
       handleSearch={handleSearch}
       searchCriteria={searchCriteria}
       setSearchCriteria={setSearchCriteria}
+      selectedRowIndex={selectedRowIndex}
+      handleTitleClick={handleTitleClick}
     />
   );
 };
