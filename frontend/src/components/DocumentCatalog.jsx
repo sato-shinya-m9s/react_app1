@@ -109,7 +109,7 @@ const ModalPresentational = ({
     </div>
   );
 };
-const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria }) => {
+const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria, filterText }) => {
   const yearOptions = [
     { era: '平成', year: 1 },
     { era: '平成', year: 2 },
@@ -169,7 +169,7 @@ const Modal = ({ isOpen, onClose, onSearch, searchCriteria, setSearchCriteria })
       completionDateRange
     };
     setSearchCriteria(newCriteria);
-    onSearch(newCriteria);
+    onSearch({...newCriteria, filterText: filterText});
     onClose();
   };
 
@@ -308,7 +308,7 @@ const DocumentCatalogPresentational = ({
           次
         </button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria} />
+      <Modal isOpen={isModalOpen} onClose={toggleModal} onSearch={handleSearch} searchCriteria={searchCriteria} setSearchCriteria={setSearchCriteria}　filterText={filterText} />
       <footer className="footer">
         <span>©2024 NS Solutions Corporation</span>
       </footer>
@@ -370,8 +370,8 @@ const DocumentCatalog = () => {
   };
 
   const handleSearch = (searchCriteria) => {
-    const { andKeywords, orKeywords, selectedYear, departmentSelections, completionDateRange } = searchCriteria;
-
+    const { andKeywords, orKeywords, selectedYear, departmentSelections, completionDateRange, filterText } = searchCriteria;
+  
     const andKeywordsArray = andKeywords.split(' ').filter(Boolean);
     const orKeywordsArray = orKeywords.split(' ').filter(Boolean);
     const departmentArray = [
@@ -379,7 +379,7 @@ const DocumentCatalog = () => {
       departmentSelections.department && `${departmentSelections.department}部`,
       departmentSelections.section && `${departmentSelections.section}課`
     ].filter(Boolean);
-
+  
     const filteredData = sortedData.filter(item => {
       const matchesAndKeywords = andKeywordsArray.every(keyword => item.title.includes(keyword));
       const matchesOrKeywords = orKeywordsArray.length === 0 || orKeywordsArray.some(keyword => item.title.includes(keyword));
@@ -391,20 +391,20 @@ const DocumentCatalog = () => {
         const startMonth = Number(completionDateRange.startMonth);
         const endYear = Number(completionDateRange.endYear);
         const endMonth = Number(completionDateRange.endMonth);
-
+  
         const itemDateValue = itemYear * 12 + itemMonth;
         const startDateValue = startYear * 12 + startMonth;
         const endDateValue = endYear * 12 + endMonth;
-
+  
         return (!startYear || itemDateValue >= startDateValue) && (!endYear || itemDateValue <= endDateValue);
       })();
-
+  
       // filterTextの値がタイトルに部分一致するかどうかを確認
       const matchesFilterText = !filterText || item.title.includes(filterText);
-
+  
       return matchesAndKeywords && matchesOrKeywords && matchesYear && matchesDepartment && matchesCompletionDate && matchesFilterText;
     });
-
+  
     setCurrentPage(1); // 最初のページにリセット
     setFilteredData(filteredData); // フィルタリングされたデータを更新
   };
@@ -423,7 +423,9 @@ const DocumentCatalog = () => {
   };
 
   const handleFilterChange = (event) => {
-    setFilterText(event.target.value);
+    const newFilterText = event.target.value;
+    setFilterText(newFilterText);
+    handleSearch({ ...searchCriteria, filterText: newFilterText });
   };
 
   const indexOfLastEntry = currentPage * entriesPerPage;
