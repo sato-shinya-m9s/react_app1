@@ -341,7 +341,12 @@ const DocumentCatalog = () => {
     department: '〇〇局〇〇部〇〇課',
     title: `ダミータイトル${index + 1}`,
     date: `2023/${String((index % 12) + 1).padStart(2, '0')}/14`,
-    duration: `${(index % 5) + 1}年`
+    duration: `${(index % 5) + 1}年`,
+    documentClassification: {
+      largeCategory: '総務',
+      mediumCategory: '庶務',
+      smallCategory: '広報広聴'
+    }
   }));
 
   const sortedData = useMemo(() => {
